@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Список дел</title>
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 40px;
+    }
+
+    #app {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+    }
+
+    .done {
+      text-decoration: line-through;
+      color: gray;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <h1>Список дел</h1>
+
+  <input v-model="newTodo" placeholder="Новое дело">
+  <button @click="addTodo">Добавить</button>
+
+  <ul>
+    <li v-for="todo in todos" :key="todo.id">
+      <span
+        :class="{ done: todo.done }"
+        @click="todo.done = !todo.done"
+      >
+        {{ todo.text }}
+      </span>
+      <button @click="removeTodo(todo.id)">✕</button>
+    </li>
+  </ul>
+</div>
+
+<script>
+  const { createApp } = Vue
+
+  createApp({
+    data() {
+      return {
+        newTodo: '',
+        todos: []
+      }
+    },
+    methods: {
+      addTodo() {
+        if (this.newTodo.trim() === '') return
+
+        this.todos.push({
+          id: Date.now(),
+          text: this.newTodo,
+          done: false
+        })
+
+        this.newTodo = ''
+      },
+      removeTodo(id) {
+        this.todos = this.todos.filter(todo => todo.id !== id)
+      }
+    }
+  }).mount('#app')
+</script>
+
+</body>
+</html>
